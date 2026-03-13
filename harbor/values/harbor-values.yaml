@@ -1,0 +1,41 @@
+expose:
+  type: nodePort
+  tls:
+    enabled: false
+  nodePort:
+    ports:
+      http:
+        port: 80
+        nodePort: 30002
+
+externalURL: http://8.130.112.86:30002
+
+persistence:
+  enabled: true
+  storageClass: "local-path"
+  persistentVolumeClaim:
+    registry:
+      size: 10Gi
+    jobservice:
+      size: 1Gi
+    database:
+      size: 5Gi
+    redis:
+      size: 1Gi
+
+harborAdminPassword: "Harbor12345"
+
+nginx:
+  replicas: 1
+portal:
+  replicas: 1
+core:
+  replicas: 1
+jobservice:
+  replicas: 1
+registry:
+  replicas: 1
+trivy:
+  enabled: false
+chartmuseum:
+  enabled: false

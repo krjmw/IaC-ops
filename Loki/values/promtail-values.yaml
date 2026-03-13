@@ -1,0 +1,50 @@
+config:
+  clients:
+    - url: http://my-loki-gateway.monitoring.svc.cluster.local/loki/api/v1/push
+      tenant_id: monitoring
+  snippets:
+    scrapeConfigs: |
+      - job_name: kubernetes-pods
+        kubernetes_sd_configs:
+          - role: pod
+        relabel_configs:
+          # 这行是核心！告诉 promtail 去哪里读日志文件
+          - source_labels: [__meta_kubernetes_pod_uid, __meta_kubernetes_pod_container_name]
+            separator: /
+            target_label: __path__
+            replacement: /var/log/pods/*$1/$2/*.log
+          - action: labelmap
+            regex: __meta_kubernetes_pod_label_(.+)
+          - source_labels: [__meta_kubernetes_namespace]
+            target_label: namespace
+          - source_labels: [__meta_kubernetes_pod_name]
+            target_label: pod
+          - source_labels: [__meta_kubernetes_pod_container_name]
+            target_label: container
+
+# 资源限制
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi
+
+# DaemonSet 配置
+daemonset:
+  enabled: true
+  volumes:
+    - name: pods
+      hostPath:
+        path: /var/log/pods
+    - name: positions
+      hostPath:
+        path: /var/lib/promtail/positions
+        type: DirectoryOrCreate
+  volumeMounts:
+    - name: pods
+      mountPath: /var/log/pods
+      readOnly: true
+    - name: positions
+      mountPath: /run/promtail

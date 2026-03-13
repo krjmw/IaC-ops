@@ -1,0 +1,37 @@
+configuration:
+  config: |
+    modules:
+      default:
+        headers: {}
+        metrics:
+          - name: queue_master_heap_used_bytes
+            path: "{.heap.used}"
+            help: "Queue Master JVM Heap Used"
+            value_type: gauge  # 改为 value_type，不是 type
+          - name: queue_master_http_requests_total
+            path: "{.counter\\.status\\.200\\.metrics}"
+            help: "Total number of successful metrics requests"
+            value_type: counter  # 改为 value_type
+          - name: queue_master_http_response_duration_seconds
+            path: "{.gauge\\.response\\.metrics}"
+            help: "The duration of the last metrics request"
+            value_type: gauge  # 改为 value_type
+          - name: queue_master_processors_total
+            path: "{.processors}"
+            help: "Number of processors"
+            value_type: gauge  # 改为 value_type
+          - name: queue_master_memory_free_bytes
+            path: "{.mem\\.free}"
+            help: "Free memory in bytes"
+            value_type: gauge  # 改为 value_type
+
+serviceMonitor:
+  enabled: true
+  labels:
+    release: prometheus
+  targets:
+    - name: queue-master
+      url: http://queue-master.sock-shop.svc.cluster.local:80/metrics
+      module: default
+      interval: 30s
+      scrapeTimeout: 30s

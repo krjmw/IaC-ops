@@ -1,0 +1,116 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: sock-shop-carts
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels:
+      name: carts
+  namespaceSelector:
+    matchNames:
+    - sock-shop
+  endpoints:
+  - port: http
+    interval: 15s
+    path: /metrics
+
+---
+
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: sock-shop-orders
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels:
+      name: orders
+  namespaceSelector:
+    matchNames:
+    - sock-shop
+  endpoints:
+  - port: http  
+    interval: 15s
+    path: /metrics
+
+---
+
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: sock-shop-payment
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels:
+      name: payment
+  namespaceSelector:
+    matchNames:
+    - sock-shop
+  endpoints:
+  - port: http
+    interval: 15s
+    path: /metrics
+
+---
+
+
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: sock-shop-front-end
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels:
+      name: front-end
+  namespaceSelector:
+    matchNames:
+    - sock-shop
+  endpoints:
+  - port: http
+    interval: 15s
+    path: /metrics
+
+---
+
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: sock-shop-user
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels:
+      name: user
+  namespaceSelector:
+    matchNames:
+    - sock-shop
+  endpoints:
+  - port: http
+    interval: 15s
+    path: /metrics
+
+
+---
+
+
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: sock-shop-shipping
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels:
+      name: shipping
+  namespaceSelector:
+    matchNames:
+    - sock-shop
+  endpoints:
+  - port: http
+    interval: 15s
+    path: /metrics
+
+
