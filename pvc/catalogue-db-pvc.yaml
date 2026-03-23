@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: catalogue-db-pvc
+  namespace: sock-shop
+spec:
+  accessModes:
+    - ReadWriteOnce          # 单节点读写
+  resources:
+    requests:
+      storage: 5Gi           # 5G 足够测试用
+  storageClassName: local-path       # 让 k3s 用默认的 local-path

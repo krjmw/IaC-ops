@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq-exporter-new
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmq-exporter-new
+  template:
+    metadata:
+      labels:
+        app: rabbitmq-exporter-new
+    spec:
+      containers:
+      - name: exporter
+        # 使用你下载的旧版本镜像，这是关键
+        image: silenteight/rabbitmq-exporter:latest
+        env:
+        # 重点1: 通过 K8s 内部域名访问 RabbitMQ 的管理端，端口是 15672
+        - name: RABBIT_URL
+          value: "http://rabbitmq.sock-shop.svc.cluster.local:15672"
+        - name: RABBIT_USER
+          value: "guest" # 根据你的实际情况修改
+        - name: RABBIT_PASSWORD
+          value: "guest" # 根据你的实际情况修改
+        # 重点2: 关键配置，解决老版本兼容性问题
+        - name: RABBIT_CAPABILITIES
+          value: "no_sort" # 告诉 exporter 不要用新版特性
+        - name: PUBLISH_PORT
+          value: "9419"
+        ports:
+        - containerPort: 9419
+          name: metrics
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-exporter-new
+  namespace: monitoring
+  labels:
+    app: rabbitmq-exporter-new
+spec:
+  selector:
+    app: rabbitmq-exporter-new
+  ports:
+  - name: metrics
+    port: 9419
+    targetPort: 9419

@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus-webhook-dingtalk
+  namespace: monitoring
+  labels:
+    app: prometheus-webhook-dingtalk
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus-webhook-dingtalk
+  template:
+    metadata:
+      labels:
+        app: prometheus-webhook-dingtalk
+    spec:
+      tolerations:
+      - key: node.kubernetes.io/not-ready
+        operator: Equal
+        value: ""
+        effect: NoSchedule
+      containers:
+      - name: webhook
+        image: timonwong/prometheus-webhook-dingtalk:latest
+        imagePullPolicy: IfNotPresent
+        args:
+        - --web.listen-address=:8060
+        - --config.file=/etc/config/config.yml
+        ports:
+        - containerPort: 8060
+          name: http
+        volumeMounts:
+        - name: config
+          mountPath: /etc/config
+          readOnly: true
+      volumes:
+      - name: config
+        configMap:
+          name: webhook-dingtalk-config
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: webhook-dingtalk-config
+  namespace: monitoring
+data:
+  config.yml: |
+    targets:
+      webhook1:
+        url: https://oapi.dingtalk.com/robot/send?access_token=6c68f322d0227254726a5229ec4975086a28087f8991ad39f9ddeb6944d9abf9
+        secret: SEC15cb5112a8a1b7fe84980e4c7296ae0ca9e9c6197fee4e139c0920615865c942
+        message:
+          title: '{{ template "dingtalk.default.title" . }}'
+          text: '{{ template "dingtalk.default.content" . }}'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-webhook-dingtalk
+  namespace: monitoring
+  labels:
+    app: prometheus-webhook-dingtalk
+spec:
+  selector:
+    app: prometheus-webhook-dingtalk
+  ports:
+  - name: http
+    port: 8060
+    targetPort: 8060

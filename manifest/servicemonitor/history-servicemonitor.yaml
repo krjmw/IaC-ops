@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: history-service-monitor
+  namespace: sock-shop
+  labels:
+    release: prometheus   # 必须与 Prometheus 的 selector 一致
+spec:
+  selector:
+    matchLabels:
+      name: history-service   # 匹配 service 的标签
+  endpoints:
+  - port: http                # service 的端口名
+    interval: 15s
+    path: /metrics

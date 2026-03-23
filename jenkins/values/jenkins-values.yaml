@@ -1,0 +1,16 @@
+persistence:
+  enabled: true
+  storageClass: ""
+  accessMode: ReadWriteOnce
+  size: 8Gi
+  hostPath: /data/jenkins
+
+serviceType: NodePort
+nodePort: 30080
+
+installPlugins:
+  - kubernetes:1.31.3
+  - workflow-job:2.42
+  - workflow-aggregator:2.6
+  - git:4.11.0
+  - configuration-as-code:1.

@@ -29,10 +29,16 @@ alertmanager:
       group_interval: 5m
       repeat_interval: 4h
       receiver: 'dingtalk'
+    inhibit_rules:
+    - source_match:
+        severity: 'critical'
+      target_match:
+        severity: 'warning'
+      equal: ['namespace']
     receivers:
     - name: 'dingtalk'
       webhook_configs:
-      - url: 'https://oapi.dingtalk.com/robot/send?access_token=6c68f322d0227254726a5229ec4975086a28087f8991ad39f9ddeb6944d9abf9&sign=SEC15cb5112a8a1b7fe84980e4c7296ae0ca9e9c6197fee4e139c0920615865c942'
+      - url: 'http://prometheus-webhook-dingtalk.monitoring:8060/dingtalk/webhook1/send'
         send_resolved: true
     - name: "null"
     templates:

@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sockshop-ingress
+  namespace: sock-shop
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: sockshop.yqchen.top          # 改成你的域名
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: front-end
+            port:
+              number: 80

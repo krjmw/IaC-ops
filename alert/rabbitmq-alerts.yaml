@@ -1,0 +1,85 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: rabbitmq-alerts
+  namespace: monitoring
+  labels:
+    release: prometheus
+spec:
+  groups:
+  - name: rabbitmq
+    rules:
+    # 保命指标
+    - alert: RabbitMQMemoryAlarm
+      expr: rabbitmq_node_mem_alarm == 1
+      for: 1m
+      labels:
+        severity: critical
+      annotations:
+        summary: "RabbitMQ 内存告警触发"
+        description: "内存超过高水位，生产者将被阻塞"
+
+    - alert: RabbitMQDiskAlarm
+      expr: rabbitmq_node_disk_free_alarm == 1
+      for: 1m
+      labels:
+        severity: critical
+      annotations:
+        summary: "RabbitMQ 磁盘告警触发"
+        description: "磁盘剩余空间不足，生产者将被阻塞"
+
+    - alert: RabbitMQNodeDown
+      expr: rabbitmq_up{cluster="rabbit@rabbitmq-84c7879498-5rjqx"} == 0
+      for: 1m
+      labels:
+        severity: critical
+      annotations:
+        summary: "RabbitMQ 节点不可用"
+        description: "RabbitMQ exporter 无法抓取指标"
+
+    - alert: RabbitMQFileDescriptorHigh
+      expr: (rabbitmq_fd_used / rabbitmq_fd_available) > 0.8
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "RabbitMQ 文件句柄使用率 > 80%"
+        description: "当前使用率 {{ $value | humanizePercentage }}"
+
+    # 性能瓶颈
+    - alert: RabbitMQMemoryHigh
+      expr: (rabbitmq_node_mem_used / rabbitmq_node_mem_limit) > 0.5
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "RabbitMQ 内存使用率 > 50%"
+        description: "当前使用率 {{ $value | humanizePercentage }}"
+
+    # 业务稳定
+    - alert: RabbitMQQueueBacklog
+      expr: rabbitmq_queue_messages_ready{queue="shipping-task"} > 1000
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "队列 shipping-task 消息堆积 > 1000"
+        description: "当前堆积 {{ $value }} 条消息"
+
+    - alert: RabbitMQNoConsumer
+      expr: rabbitmq_queue_consumers{queue="shipping-task"} == 0
+      for: 2m
+      labels:
+        severity: critical
+      annotations:
+        summary: "队列 shipping-task 无消费者"
+        description: "队列消息将无法被消费"
+
+    - alert: RabbitMQUnackedMessages
+      expr: rabbitmq_queue_messages_unacknowledged > 100
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "未确认消息数 > 100"
+        description: "可能有消费者卡住"

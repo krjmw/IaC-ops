@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: sock-shop-catalogue
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels:
+      name: catalogue
+  namespaceSelector:
+    matchNames:
+    - sock-shop
+  endpoints:
+  - port: web
+    interval: 15s
+    path: /metrics

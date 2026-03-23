@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: sock-shop-rabbitmq
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels:
+      name: rabbitmq  # 监控的service必须有这个label，没有的要去加上
+  namespaceSelector:
+    matchNames:
+    - sock-shop
+  endpoints:
+  - port: exporter  # service定义端口名，要用名字，service原来端口没取名字都要加上名字
+    interval: 15s
+    path: /metrics

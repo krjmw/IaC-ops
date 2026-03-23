@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: session-db-redis-exporter
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: session-db-redis-exporter
+  template:
+    metadata:
+      labels:
+        app: session-db-redis-exporter
+    spec:
+      containers:
+      - name: exporter
+        image: bitnami/redis-exporter:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: REDIS_ADDR
+          value: "session-db.sock-shop.svc.cluster.local:6379"  # 修复1：改成正确的地址格式
+        - name: REDIS_EXPORTER_WEB_LISTEN_ADDRESS  # 修复2：明确指定监听地址（更规范）
+          value: ":9121"
+        ports:
+        - containerPort: 9121  # 修复3：改为 Exporter 默认端口 9121
+          name: metrics
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: session-db-redis-exporter
+  namespace: monitoring
+  labels:
+    app: session-db-redis-exporter
+spec:
+  selector:
+    app: session-db-redis-exporter
+  ports:
+  - name: metrics
+    port: 9121  # 修复4：Service 端口也改为 9121
+    targetPort: 9121
