@@ -43,6 +43,16 @@ spec:
         volumeMounts:
         - mountPath: /tmp
           name: tmp-volume
+        livenessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
       volumes:
         - name: tmp-volume
           emptyDir:
