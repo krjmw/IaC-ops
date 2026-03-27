@@ -31,5 +31,15 @@ spec:
             memory: 300Mi
         ports:
         - containerPort: 80
+        livenessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 80
+          periodSeconds: 10
+        readinessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
       nodeSelector:
         beta.kubernetes.io/os: linux
