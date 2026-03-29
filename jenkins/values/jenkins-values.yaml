@@ -8,7 +8,7 @@ persistence:
 serviceType: NodePort
 nodePort: 30080
 
-installPlugins:
+plugins:
   - kubernetes:4423.vb_59f230b_ce53
   - workflow-job:1571.vb_423c255d6d9
   - workflow-aggregator:608.v67378e9d3db_1
