@@ -9,8 +9,8 @@ serviceType: NodePort
 nodePort: 30080
 
 installPlugins:
-  - kubernetes:1.31.3
-  - workflow-job:2.42
-  - workflow-aggregator:2.6
-  - git:4.11.0
+  - kubernetes:4423.vb_59f230b_ce53
+  - workflow-job:1571.vb_423c255d6d9
+  - workflow-aggregator:608.v67378e9d3db_1
+  - git:5.10.0
   - configuration-as-code:2053.vb_0da_47381a_25
