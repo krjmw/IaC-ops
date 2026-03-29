@@ -13,4 +13,4 @@ installPlugins:
   - workflow-job:2.42
   - workflow-aggregator:2.6
   - git:4.11.0
-  - configuration-as-code:1.
+  - configuration-as-code: 2053.vb_0da_47381a_25
