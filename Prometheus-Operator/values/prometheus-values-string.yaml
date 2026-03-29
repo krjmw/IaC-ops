@@ -2,6 +2,7 @@ prometheus:
   service:
     type: NodePort  
   prometheusSpec:
+    additionalScrapeConfigs: []
     retention: 2d
     resources:
       requests:
@@ -17,6 +18,9 @@ prometheus:
           resources:
             requests:
               storage: 10Gi
+
+defaultRules:
+  create: false
 
 alertmanager:
   enabled: true
