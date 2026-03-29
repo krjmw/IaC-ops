@@ -90,3 +90,9 @@ grafana:
         gnetId: 11074
         revision: 1
         datasource: Prometheus
+
+kube-state-metrics:
+  metricLabelsAllowlist:
+    - services=[*]
+    - pods=[*]
+    - namespaces=[*]
