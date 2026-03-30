@@ -10,7 +10,7 @@ spec:
   - name: mongodb
     rules:
     - alert: mongodbconnectedAlarm
-      expr: mongodb_ss_connections{state="current"} > 50
+      expr: mongodb_ss_connections{conn_type="current"} > 50
       for: 1m
       labels:
         severity: critical
