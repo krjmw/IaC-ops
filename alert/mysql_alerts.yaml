@@ -1,0 +1,37 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: mysql-alerts
+  namespace: monitoring
+  labels:
+    release: prometheus
+spec:
+  groups:
+  - name: mysql
+    rules:
+    - alert: mysqlconnectedAlarm
+      expr: mysql_global_status_threads_connected > 80
+      for: 1m
+      labels:
+        severity: critical
+      annotations:
+        summary: "MySQL 连接数高"
+        description: "节点内存小，连接数容易爆"
+
+    - alert: mysqlslowqueryAlarm
+      expr: rate(mysql_global_status_slow_queries[5m]) > 0.5
+      for: 1m
+      labels:
+        severity: critical
+      annotations:
+        summary: "MySQL 慢查询"
+        description: "索引缺失或数据量大"
+
+    - alert: mysqlthreadsrunningAlarm
+      expr: mysql_global_status_threads_running > 10
+      for: 1m
+      labels:
+        severity: critical
+      annotations:
+        summary: "MySQL 进程数高,大量查询在执行，可能卡死"
+        description: "RabbitMQ exporter 无法抓取指标"
