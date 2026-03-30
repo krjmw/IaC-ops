@@ -10,13 +10,13 @@ spec:
   - name: redis
     rules:
     - alert: RedisMemoryHigh
-      expr: redis_memory_used_bytes > 10485760‬
+      expr: redis_memory_used_bytes > 10485760  # 10MB 阈值
       for: 5m
       labels:
         severity: critical
       annotations:
         summary: "Redis 内存使用率过高"
-        description: "当前使用率 {{ $value | humanizePercentage }}，可能触发 OOM"
+        description: "当前使用 {{ $value }} 字节，可能触发 OOM"
 
     - alert: RedisBlockedClients
       expr: redis_blocked_clients > 0
