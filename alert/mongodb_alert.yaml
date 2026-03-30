@@ -1,0 +1,28 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: mongodb-alerts
+  namespace: monitoring
+  labels:
+    release: prometheus
+spec:
+  groups:
+  - name: mongodb
+    rules:
+    - alert: mongodbconnectedAlarm
+      expr: mongodb_ss_connections > 50
+      for: 1m
+      labels:
+        severity: critical
+      annotations:
+        summary: "MongoDB 连接数高"
+        description: "内存小，连接数不宜高"
+
+    - alert: mongodbpagefaultsAlarm
+      expr: rate(mongodb_ss_extra_info_page_faults[5m]) > 100
+      for: 1m
+      labels:
+        severity: critical
+      annotations:
+        summary: "MongoDB 页错误率高"
+        description: "内存不足，数据从磁盘读"
