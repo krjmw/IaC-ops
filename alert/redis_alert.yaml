@@ -10,7 +10,7 @@ spec:
   - name: redis
     rules:
     - alert: RedisMemoryHigh
-      expr: redis_memory_used_bytes > 10485760  # 10MB 阈值
+      expr: (redis_memory_used_bytes / 10485760 )* 100  # 10MB 阈值
       for: 5m
       labels:
         severity: critical
@@ -18,11 +18,11 @@ spec:
         summary: "Redis 内存使用率过高"
         description: "当前使用 {{ $value }} 字节，可能触发 OOM"
 
-    - alert: RedisBlockedClients
-      expr: redis_blocked_clients > 0
-      for: 1m
+    - alert: Redisconnecter
+      expr: redis_connected_clients > 50
+      for: 5m
       labels:
         severity: critical
       annotations:
-        summary: "Redis 存在阻塞客户端"
-        description: "阻塞客户端数 {{ $value }}，可能有慢查询"
+        summary: "Redis 连接数高"
+        description: "Redis 连接数 {{ $value }}，可能连接泄露"
