@@ -26,3 +26,13 @@ spec:
       annotations:
         summary: "MongoDB 页错误率高"
         description: "内存不足，数据从磁盘读"
+
+
+    - alert: mongodobejctsdocumentsAlarm
+      expr: sum without(doc_op_type) (rate(mongodb_ss_metrics_queryExecutor_scannedObjects[5m])) / sum without(doc_op_type) (rate(mongodb_ss_metrics_document{doc_op_type="returned"}[5m]) + 1 ) > 10
+      for: 1m
+      labels:
+        severity: critical
+      annotations:
+        summary: "MongoDB 扫描文档数 / 返回文档数"
+        description: "索引效率低，扫描了大量文档才返回少量结果"
