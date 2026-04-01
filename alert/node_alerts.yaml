@@ -1,0 +1,43 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: node-alerts
+  namespace: monitoring
+  labels:
+    release: prometheus
+spec:
+  groups:
+  - name: node
+    rules:
+    - alert: NodeStatus
+      expr: kube_node_status_condition{condition="Ready", status="true"} == 0
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        summary: " {{ $labels.node }}节点挂了"
+        description: "{{ $labels.node }}节点挂了"
+    - alert: NodeCPU
+      expr: (1 - avg(rate(node_cpu_seconds_total{mode="idle"}[5m]))) * 100 > 80
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: " CPU使用率超过80% "
+        description: " CPU使用率为$value "
+    - alert: NodeMemory
+      expr: (1 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) * 100 > 90
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: " 内存使用率超过90% "
+        description: " 内存使用率为$value "
+    - alert: NodeBytes
+      expr: (1 - node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) * 100 > 90
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: " 磁盘使用率超过90% "
+        description: " 磁盘使用率为$value "
