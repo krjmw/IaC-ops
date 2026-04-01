@@ -28,34 +28,6 @@ spec:
         summary: "RabbitMQ 磁盘告警触发"
         description: "磁盘剩余空间不足，生产者将被阻塞"
 
-    - alert: RabbitMQNodeDown
-      expr: rabbitmq_up{cluster="rabbit@rabbitmq-84c7879498-5rjqx"} == 0
-      for: 1m
-      labels:
-        severity: critical
-      annotations:
-        summary: "RabbitMQ 节点不可用"
-        description: "RabbitMQ exporter 无法抓取指标"
-
-    - alert: RabbitMQFileDescriptorHigh
-      expr: (rabbitmq_fd_used / rabbitmq_fd_available) > 0.8
-      for: 5m
-      labels:
-        severity: warning
-      annotations:
-        summary: "RabbitMQ 文件句柄使用率 > 80%"
-        description: "当前使用率 {{ $value | humanizePercentage }}"
-
-    # 性能瓶颈
-    - alert: RabbitMQMemoryHigh
-      expr: (rabbitmq_node_mem_used / rabbitmq_node_mem_limit) > 0.5
-      for: 5m
-      labels:
-        severity: warning
-      annotations:
-        summary: "RabbitMQ 内存使用率 > 50%"
-        description: "当前使用率 {{ $value | humanizePercentage }}"
-
     # 业务稳定
     - alert: RabbitMQQueueBacklog
       expr: rabbitmq_queue_messages_ready{queue="shipping-task"} > 1000
