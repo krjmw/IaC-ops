@@ -26,12 +26,3 @@ spec:
       annotations:
         summary: "MySQL 慢查询"
         description: "索引缺失或数据量大"
-
-    - alert: mysqlthreadsrunningAlarm
-      expr: mysql_global_status_threads_running > 10
-      for: 1m
-      labels:
-        severity: critical
-      annotations:
-        summary: "MySQL 进程数高,大量查询在执行，可能卡死"
-        description: "RabbitMQ exporter 无法抓取指标"
