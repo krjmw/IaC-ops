@@ -15,6 +15,7 @@ spec:
       for: 1m
       labels:
         severity: critical
+        alertgroup: redis
       annotations:
         summary: "Redis 内存使用率过高"
         description: "当前使用 {{ $value }} 字节，可能触发 OOM"
@@ -24,6 +25,7 @@ spec:
       for: 2m
       labels:
         severity: critical
+        alertgroup: redis
       annotations:
         summary: "Redis 连接数高"
         description: "Redis 连接数 {{ $value }}，可能连接泄露"
