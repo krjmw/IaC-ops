@@ -15,6 +15,7 @@ spec:
       for: 5m
       labels:
         severity: critical
+        alertgroup: pvc
       annotations:
         summary: "PVC {{ $labels.persistentvolumeclaim }} 使用率 > 85%"
         description: "当前使用率 {{ $value | humanizePercentage }}，请及时扩容或清理数据"
