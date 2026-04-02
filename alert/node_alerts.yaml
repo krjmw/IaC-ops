@@ -15,6 +15,7 @@ spec:
       for: 1m
       labels:
         severity: critical
+        alertgroup: node
       annotations:
         summary: " {{ $labels.node }}节点挂了"
         description: "{{ $labels.node }}节点挂了"
@@ -23,6 +24,7 @@ spec:
       for: 2m
       labels:
         severity: critical
+        alertgroup: node
       annotations:
         summary: " 磁盘使用率超过85% "
         description: " 磁盘使用率为$value "
