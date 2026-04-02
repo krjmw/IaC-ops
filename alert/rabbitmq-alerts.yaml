@@ -17,6 +17,7 @@ spec:
       annotations:
         summary: "rabbitmq不可用 "
         description: "rabbitmq挂了"
+        
     - alert: RabbitMQQueueBacklog
       expr: increase(rabbitmq_queue_messages_ready{queue="shipping-task"}[5m]) > 100
       for: 5m
