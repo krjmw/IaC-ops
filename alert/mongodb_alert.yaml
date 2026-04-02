@@ -5,6 +5,7 @@ metadata:
   namespace: monitoring
   labels:
     release: prometheus
+    alertgroup: mongodb
 spec:
   groups:
   - name: mongodb
