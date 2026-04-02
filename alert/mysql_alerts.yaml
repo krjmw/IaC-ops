@@ -15,6 +15,7 @@ spec:
       for: 2m
       labels:
         severity: critical
+        alertgroup: mysql
       annotations:
         summary: "MySQL 连接数高"
         description: "节点内存小，连接数容易爆"
@@ -24,6 +25,7 @@ spec:
       for: 5m
       labels:
         severity: warning
+        alertgroup: mysql
       annotations:
         summary: "MySQL 慢查询"
         description: "索引缺失或数据量大"
