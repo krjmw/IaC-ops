@@ -15,6 +15,7 @@ spec:
       for: 2m
       labels:
         severity: critical
+        alertgroup: mongodb
       annotations:
         summary: "MongoDB 连接数高"
         description: "内存小，连接数不宜高"
@@ -24,6 +25,7 @@ spec:
       for: 5m
       labels:
         severity: warning
+        alertgroup: mongodb
       annotations:
         summary: "MongoDB 页错误率高"
         description: "内存不足，数据从磁盘读"
