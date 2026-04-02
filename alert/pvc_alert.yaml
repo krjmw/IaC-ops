@@ -14,7 +14,7 @@ spec:
       expr: (kubelet_volume_stats_used_bytes / kubelet_volume_stats_capacity_bytes) * 100 > 85
       for: 5m
       labels:
-        severity: warning
+        severity: critical
       annotations:
         summary: "PVC {{ $labels.persistentvolumeclaim }} 使用率 > 85%"
         description: "当前使用率 {{ $value | humanizePercentage }}，请及时扩容或清理数据"
