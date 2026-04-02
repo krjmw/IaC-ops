@@ -5,6 +5,7 @@ metadata:
   namespace: monitoring
   labels:
     release: prometheus
+    alertgroup: node
 spec:
   groups:
   - name: node
