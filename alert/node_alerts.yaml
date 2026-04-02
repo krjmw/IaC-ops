@@ -12,7 +12,7 @@ spec:
     rules:
     - alert: NodeStatus
       expr: kube_node_status_condition{condition="Ready", status="true"} == 0
-      for: 5m
+      for: 1m
       labels:
         severity: critical
       annotations:
@@ -20,9 +20,9 @@ spec:
         description: "{{ $labels.node }}节点挂了"
     - alert: NodeBytes
       expr: (1 - node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) * 100 > 85
-      for: 5m
+      for: 2m
       labels:
-        severity: warning
+        severity: critical
       annotations:
-        summary: " 磁盘使用率超过90% "
+        summary: " 磁盘使用率超过85% "
         description: " 磁盘使用率为$value "
