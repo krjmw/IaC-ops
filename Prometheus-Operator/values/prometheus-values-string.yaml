@@ -27,18 +27,54 @@ alertmanager:
   config:
     global:
       resolve_timeout: 5m
-    route:
-      group_by: ['alertname', 'namespace']
-      group_wait: 30s
-      group_interval: 5m
-      repeat_interval: 4h
-      receiver: 'dingtalk'
-    inhibit_rules:
-    - source_match:
-        severity: 'critical'
-      target_match:
-        severity: 'warning'
-      equal: ['namespace']
+
+  route:
+    receiver: 'dingtalk'
+    group_by: ['alertgroup', 'namespace']
+    group_wait: 30s
+    group_interval: 5m
+    repeat_interval: 4h
+  
+  routes:
+  # Critical 快速通道
+  - match:
+      severity: critical
+    group_wait: 10s
+    continue: true
+    
+  # Warning 慢速通道
+  - match:
+      severity: warning
+    group_wait: 1m
+
+  # 抑制规则
+inhibit_rules:
+  # 1. Critical 抑制同 namespace 的 Warning（全局）
+  - source_match:
+      severity: critical
+    target_match:
+      severity: warning
+    equal: ['namespace']
+    
+  # 2. 单节点Node 宕机抑制同 node 的所有服务告警（跨 group）
+  - source_match:
+      alertgroup: node
+      alertname: NodeStatus
+      severity: critical
+    target_match:
+      alertgroup: app
+    equal: ['namespace']
+    
+  # 3. 服务不可用抑制同 service 的高错误率（同 group 内精细化）
+  - source_match:
+      alertgroup: app
+      alertname: ServiceDown
+      severity: critical
+    target_match:
+      alertgroup: app
+      alertname: HighErrorRate
+    equal: ['namespace', 'service']
+    
     receivers:
     - name: 'dingtalk'
       webhook_configs:
