@@ -11,7 +11,7 @@ spec:
     rules:
     - alert: RedisMemoryHigh
       expr:  redis_memory_used_bytes > 104857600  # 10MB 阈值
-      for: 5m
+      for: 1m
       labels:
         severity: critical
       annotations:
@@ -20,7 +20,7 @@ spec:
 
     - alert: Redisconnecter
       expr: redis_connected_clients > 50
-      for: 5m
+      for: 2m
       labels:
         severity: critical
       annotations:
