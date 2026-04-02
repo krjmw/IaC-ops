@@ -11,7 +11,7 @@ spec:
     rules:
     - alert: mysqlconnectedAlarm
       expr: mysql_global_status_threads_connected > 80
-      for: 1m
+      for: 2m
       labels:
         severity: critical
       annotations:
@@ -20,9 +20,9 @@ spec:
 
     - alert: mysqlslowqueryAlarm
       expr: rate(mysql_global_status_slow_queries[5m]) > 0.5
-      for: 1m
+      for: 5m
       labels:
-        severity: critical
+        severity: warning
       annotations:
         summary: "MySQL 慢查询"
         description: "索引缺失或数据量大"
