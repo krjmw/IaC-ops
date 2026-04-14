@@ -1,14 +1,21 @@
 expose:
   type: nodePort
   tls:
-    enabled: false
+    enabled: true                    # 改为 true
+    certSource: "secret"             # 使用 secret 方式
+    secret:
+      secretName: "harbor-tls"       # secret 名称
+      notarySecretName: "notary-tls"  # notary 的 secret（可选）
   nodePort:
     ports:
+      https:                          # 新增 https 配置
+        port: 443
+        nodePort: 30443              # HTTPS 的 nodePort（可自定义）
       http:
         port: 80
         nodePort: 30002
 
-externalURL: http://8.130.112.86:30002
+externalURL: https://8.130.112.86:30443    # 改为 https，端口改为 30443
 
 persistence:
   enabled: true
